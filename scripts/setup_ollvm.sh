@@ -14,7 +14,7 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
 WORK_DIR="${OLLVM_WORK_DIR:-${ROOT_DIR}/.ollvm}"
-REPO_URL="${OLLVM_REPO_URL:-https://github.com/nicedayzhu/Hikari-LLVM15.git}"
+REPO_URL="${OLLVM_REPO_URL:-https://github.com/ChandHsu/Hikari-LLVM15.git}"
 NDK_VERSION="${ANDROID_NDK_VERSION:-26.1.10909125}"
 HIKARI_DIR="${WORK_DIR}/Hikari-LLVM15"
 BUILD_DIR="${HIKARI_DIR}/build"
