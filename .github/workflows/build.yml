@@ -1,0 +1,72 @@
+name: Build Benchmark APKs
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install Android SDK components
+        run: |
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "cmake;3.22.1" "ndk;26.1.10909125"
+
+      - name: Setup OLLVM
+        run: |
+          ./scripts/setup_ollvm.sh
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ hashFiles('**/*.gradle.kts', 'gradle/wrapper/gradle-wrapper.properties') }}
+          restore-keys: gradle-
+
+      - name: Build all APKs
+        run: ./gradlew buildAllApks --no-daemon
+
+      - name: Verify outputs
+        run: |
+          echo "=== Built APKs ==="
+          ls -la output/*.apk
+          echo ""
+          echo "=== Ground Truth ==="
+          cat output/ground_truth.json
+          echo ""
+          echo "=== APK count ==="
+          count=$(ls output/*.apk | wc -l)
+          echo "Total: $count APKs"
+          if [ "$count" -ne 9 ]; then
+            echo "ERROR: Expected 9 APKs, got $count"
+            exit 1
+          fi
+
+      - name: Upload APKs
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-apks
+          path: |
+            output/*.apk
+            output/ground_truth.json
+          retention-days: 30

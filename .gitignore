@@ -1,0 +1,57 @@
+# macOS / IDE
+.DS_Store
+.idea/
+*.iml
+
+# Local configuration and secrets
+local.properties
+*.local.properties
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.pem
+*.key
+
+# Gradle / Android build output
+.gradle/
+build/
+**/build/
+captures/
+.externalNativeBuild/
+.cxx/
+*.apk
+*.aab
+*.ap_
+*.dex
+
+# Native build output
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+compile_commands.json
+*.o
+*.obj
+*.a
+*.so
+*.dylib
+*.dll
+*.exe
+
+# Go build/test output
+agent/bench-agent
+*.test
+coverage.out
+
+# Generated benchmark results
+output/
+agent/results/
+
+# Local OLLVM build and generated NDK overlay.
+.ollvm/
+
+# Logs and temporary files
+*.log
+*.tmp
+*.swp
